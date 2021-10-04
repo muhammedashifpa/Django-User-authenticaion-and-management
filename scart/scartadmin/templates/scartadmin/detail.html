@@ -1,0 +1,97 @@
+{% extends "scartadmin/base.html" %}
+
+{% block nav %}
+<div class="d-flex">
+  <a class="navbar-brand">Admin/users/{{ user_detail.username}}</a>
+</div>
+<div class="d-flex">
+  {% if not user_detail.is_superuser %}
+    <button type="button" class="btn btn-danger me-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Delete user</button>
+    {% endif %}
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Are you sure</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Every data related to this user will be delete
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <a href="{% url 'admin:delete_user' user_detail.id %}" class="btn btn-danger">Delete</a>
+                </div>
+              </div>
+            </div>
+          </div>
+    <a type="button" class="btn btn-primary" href="{% url 'admin:edit_detail' user_detail.id %}">Edit {{ user_detail.username}} Details</a>
+</div>
+{% endblock %}
+
+
+{% block content %}
+{% if user_detail %}
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label for="inputEmail4" class="form-label">First Name</label>
+            <h4 class="form-control">{% if user_detail.first_name %}{{ user_detail.first_name}}{% else %} not availabe{% endif %}</h4>
+        </div>
+        <div class="col-md-3">
+            <label for="inputEmail4" class="form-label">Last Name</label>
+            <h4 class="form-control">{% if user_detail.last_name %}{{ user_detail.last_name}}{% else %} not availabe{% endif %}</h4>
+        </div>
+        <div class="col-md-4">
+            <label for="inputEmail4" class="form-label">Email</label>
+            <h4 class="form-control">{% if user_detail.email %}{{ user_detail.email}}{% else %} not availabe{% endif %}</h4>
+        </div>
+        <div class="col-md-2">
+            <label for="inputZip" class="form-label">User id</label>
+            <h4 class="form-control">{{ user_detail.id}}</h4>
+        </div>
+        <div class="col-md-3">
+            <label for="inputState" class="form-label">Username</label>
+            <h4 class="form-control">{{ user_detail.username}}</h4>
+        </div>
+        <div class="col-md-3">
+            <label for="inputState" class="form-label">Password</label>
+            <h4 class="form-control">......</h4>
+        </div>
+        <div class="col-md-4">
+            <label for="inputZip" class="form-label">Last Login</label>
+            <h4 class="form-control">{% if user_detail.last_login %}{{ user_detail.last_login}}{% else %} not availabe{% endif %}</h4>
+        </div>
+        <div class="col-md-2">
+            <label for="inputZip" class="form-label">Status</label>
+            <h4 class="form-control">{% if user_detail.is_active %}active{% else %} not active{% endif %}</h4>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+          <tr>
+              <th scope="col">Order ID</th>
+            <th scope="col">Item Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Order Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr> -->
+          {% for order in user_detail.orders_set.all %}
+            <tr>
+              <th scope="row">{{order.order_id}}</th>
+              <td>{{order.item_name}}</td>
+              <td>{{order.price}}</td>
+              <td>{{order.order_date}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+  {% endif %}
+{% endblock %}
